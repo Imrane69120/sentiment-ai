@@ -6,7 +6,7 @@ pipeline {
         // Nom de l'image Docker
         IMAGE_NAME = 'sentiment-ai'
         // Registry GitHub (remplacez VOTRE_PSEUDO par votre pseudo GitHub)
-        REGISTRY = 'ghcr.io/VOTRE_PSEUDO'
+        REGISTRY = 'ghcr.io/imrane69120'
         // Tag = 7 premiers caractères du SHA Git
         IMAGE_TAG = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
     }
@@ -24,11 +24,11 @@ pipeline {
 
         stage('Lint') {
             steps {
-                // Lancer flake8 dans un conteneur Python temporaire
+                // Lancer flake8 avec --volumes-from pour accéder au workspace Jenkins (DooD)
                 sh '''
                     docker run --rm \
-                        -v $(pwd):/app \
-                        -w /app \
+                        --volumes-from jenkins \
+                        -w $(pwd) \
                         python:3.11-slim \
                         sh -c "pip install flake8 -q && flake8 src/ --max-line-length=100"
                 '''
